@@ -1,0 +1,15 @@
+{
+    "topology": "cylinder",
+    "coil_resolution": 100,
+    "coil_radius": [1.0, 1.0],
+    "coil_p": [2, 2],
+    "coil_q": [2, 2],
+    "coil_z": [0, 5],
+    "cross_section_resolution": 8,
+    "coil_angle": [0, 4],
+    "coil_logarithm": [0, 0],
+    "cross_section_m": [4, 2],
+    "cross_section_n": [4, 2],
+    "cross_section_twist": [0, 0],
+    "cross_section_radius": [0.5, 0.5]
+}

@@ -52,9 +52,8 @@ class SuperSeashell:
         self.parameters = parameters
         self.u_res = parameters['cross_section_resolution']
         self.v_res = parameters['coil_resolution']
-        self.middle_rows = empty_grid(self.u_res, self.v_res)
-        self.start_row = []
-        self.end_row = []
+        self.topology = parameters['topology']
+        self.rows = empty_grid(self.v_res + 1, self.u_res)
         self.start_cap = None
         self.end_cap = None
         self.mesh = Mesh()
@@ -64,13 +63,72 @@ class SuperSeashell:
         return self.mesh
 
     def generate_vertices(self):
-        for i in range(self.u_res):
-            u = float(i) / (self.u_res - 1)
-            for j in range(self.v_res):
-                v = float(j) / (self.v_res - 1)
+        if self.topology == 'torus':
+            self.generate_torus_vertices()
+        elif self.topology == 'cone':
+            self.generate_cone_vertices()
+        elif self.topology == 'reverse_cone':
+            self.generate_reverse_cone_vertices()
+        elif self.topology == 'cylinder':
+            self.generate_cylinder_vertices()
+        else:
+            raise RuntimeError(f'Not a valid topology: {self.topology}')
+
+    def generate_torus_vertices(self):
+        for j in range(self.v_res):
+            v = float(j) / (self.v_res)
+            for i in range(self.u_res):
+                u = float(i) / (self.u_res)
                 vertex = self(u, v)
                 idx = self.mesh.add_vertex(vertex)
-                self.middle_rows[i][j] = idx
+                self.rows[j][i] = idx
+
+    def generate_cone_vertices(self):
+        start_cap = self.coil(0.0)
+        self.start_cap = self.mesh.add_vertex(start_cap)
+
+        for i in range(self.v_res):
+            v = float(i) / (self.v_res)
+            for j in range(self.u_res):
+                u = float(j) / (self.u_res)
+                vertex = self(u, v)
+                idx = self.mesh.add_vertex(vertex)
+                self.rows[i][j] = idx
+
+        end_point = self(0.0, 1.0) 
+        end_idx = self.mesh.add_vertex(end_point)
+        self.rows[-1][0] = end_idx
+
+    def generate_reverse_cone_vertices(self):
+        start_point = self(0.0, 0.0) 
+        start_idx = self.mesh.add_vertex(start_point)
+        self.rows[0][0] = start_idx
+
+        for i in range(1, self.v_res + 1):
+            v = float(i) / (self.v_res)
+            for j in range(self.u_res):
+                u = float(j) / (self.u_res)
+                vertex = self(u, v)
+                idx = self.mesh.add_vertex(vertex)
+                self.rows[i][j] = idx
+
+        end_cap = self.coil(1.0)
+        self.end_cap = self.mesh.add_vertex(end_cap)
+
+    def generate_cylinder_vertices(self): 
+        start_cap = self.coil(0.0)
+        self.start_cap = self.mesh.add_vertex(start_cap)
+
+        for i in range(self.v_res + 1):
+            v = float(i) / (self.v_res)
+            for j in range(self.u_res):
+                u = float(j) / (self.u_res)
+                vertex = self(u, v)
+                idx = self.mesh.add_vertex(vertex)
+                self.rows[i][j] = idx
+
+        end_cap = self.coil(1.0)
+        self.end_cap = self.mesh.add_vertex(end_cap)
 
     def __call__(self, u, v):
         return add_vecs(self.coil(v), self.cross_section(u, v))
