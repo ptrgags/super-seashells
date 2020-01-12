@@ -144,18 +144,8 @@ class SuperSeashell:
             raise RuntimeError(f'Not a valid topology: {self.topology}')
 
     def generate_torus_faces(self):
-        pass
-
-    def generate_cone_faces(self):
-        pass
-
-    def generate_reverse_cone_faces(self):
-        pass
-
-    def generate_cylinder_faces(self):
-        for i in range(self.v_res):
+        for i in range(self.v_res - 1):
             for j in range(self.u_res - 1):
-                print(i, j)
                 v1 = self.rows[i][j]
                 v2 = self.rows[i][j + 1]
                 v3 = self.rows[i + 1][j + 1]
@@ -165,6 +155,188 @@ class SuperSeashell:
                 # pointing outwards
                 self.mesh.add_face([v1, v4, v3])
                 self.mesh.add_face([v1, v3, v2])
+
+        # Fill the seam
+        for i in range(self.v_res - 1):
+            v1 = self.rows[i][-1]
+            v2 = self.rows[i][0]
+            v3 = self.rows[i + 1][0]
+            v4 = self.rows[i + 1][-1]
+
+            # This is intentionally clockwise to ensure normals are
+            # pointing outwards
+            self.mesh.add_face([v1, v4, v3])
+            self.mesh.add_face([v1, v3, v2])
+
+        # loop the end back to the start
+        for j in range(self.u_res - 1):
+            v1 = self.rows[-2][j]
+            v2 = self.rows[-2][j + 1]
+            v3 = self.rows[0][j + 1]
+            v4 = self.rows[0][j]
+
+            # This is intentionally clockwise to ensure normals are
+            # pointing outwards
+            self.mesh.add_face([v1, v4, v3])
+            self.mesh.add_face([v1, v3, v2])
+
+        # Add the last quad where the seam meets the loop row
+        v1 = self.rows[-2][-1]
+        v2 = self.rows[-2][0]
+        v3 = self.rows[0][0]
+        v4 = self.rows[0][-1]
+
+        # This is intentionally clockwise to ensure normals are
+        # pointing outwards
+        self.mesh.add_face([v1, v4, v3])
+        self.mesh.add_face([v1, v3, v2])
+
+    def generate_cone_faces(self):
+        for i in range(self.v_res - 1):
+            for j in range(self.u_res - 1):
+                v1 = self.rows[i][j]
+                v2 = self.rows[i][j + 1]
+                v3 = self.rows[i + 1][j + 1]
+                v4 = self.rows[i + 1][j]
+
+                # This is intentionally clockwise to ensure normals are
+                # pointing outwards
+                self.mesh.add_face([v1, v4, v3])
+                self.mesh.add_face([v1, v3, v2])
+
+
+        # Fill the seam
+        for i in range(self.v_res - 1):
+            v1 = self.rows[i][-1]
+            v2 = self.rows[i][0]
+            v3 = self.rows[i + 1][0]
+            v4 = self.rows[i + 1][-1]
+
+            # This is intentionally clockwise to ensure normals are
+            # pointing outwards
+            self.mesh.add_face([v1, v4, v3])
+            self.mesh.add_face([v1, v3, v2])
+
+        # Add cap at the start end
+        for j in range(self.u_res - 1):
+            v1 = self.rows[0][j]
+            v2 = self.rows[0][j + 1]
+            self.mesh.add_face([self.start_cap, v1, v2])
+
+        # start cap seam
+        v1 = self.rows[0][-1]
+        v2 = self.rows[0][0]
+        self.mesh.add_face([self.start_cap, v1, v2])
+
+        # End comes to a point
+        for j in range(self.u_res - 1):
+            point = self.rows[-1][0]
+            v1 = self.rows[-2][j]
+            v2 = self.rows[-2][j + 1]
+            self.mesh.add_face([point, v2, v1])
+
+        # point seam
+        point = self.rows[-1][0]
+        v1 = self.rows[-2][-1]
+        v2 = self.rows[-2][0]
+        self.mesh.add_face([point, v2, v1])
+
+    def generate_reverse_cone_faces(self):
+        for i in range(1, self.v_res):
+            for j in range(self.u_res - 1):
+                v1 = self.rows[i][j]
+                v2 = self.rows[i][j + 1]
+                v3 = self.rows[i + 1][j + 1]
+                v4 = self.rows[i + 1][j]
+
+                # This is intentionally clockwise to ensure normals are
+                # pointing outwards
+                self.mesh.add_face([v1, v4, v3])
+                self.mesh.add_face([v1, v3, v2])
+
+
+        # Fill the seam
+        for i in range(1, self.v_res):
+            v1 = self.rows[i][-1]
+            v2 = self.rows[i][0]
+            v3 = self.rows[i + 1][0]
+            v4 = self.rows[i + 1][-1]
+
+            # This is intentionally clockwise to ensure normals are
+            # pointing outwards
+            self.mesh.add_face([v1, v4, v3])
+            self.mesh.add_face([v1, v3, v2])
+
+        # Add cap at the end
+        for j in range(self.u_res - 1):
+            v1 = self.rows[-1][j]
+            v2 = self.rows[-1][j + 1]
+            self.mesh.add_face([self.end_cap, v2, v1])
+
+        # end cap seam
+        v1 = self.rows[-1][-1]
+        v2 = self.rows[-1][0]
+        self.mesh.add_face([self.end_cap, v2, v1])
+
+        # start comes to a point
+        for j in range(self.u_res - 1):
+            point = self.rows[0][0]
+            v1 = self.rows[1][j]
+            v2 = self.rows[1][j + 1]
+            self.mesh.add_face([point, v1, v2])
+
+        # point seam
+        point = self.rows[0][0]
+        v1 = self.rows[1][-1]
+        v2 = self.rows[1][0]
+        self.mesh.add_face([point, v1, v2])
+
+    def generate_cylinder_faces(self):
+        for i in range(self.v_res):
+            for j in range(self.u_res - 1):
+                v1 = self.rows[i][j]
+                v2 = self.rows[i][j + 1]
+                v3 = self.rows[i + 1][j + 1]
+                v4 = self.rows[i + 1][j]
+
+                # This is intentionally clockwise to ensure normals are
+                # pointing outwards
+                self.mesh.add_face([v1, v4, v3])
+                self.mesh.add_face([v1, v3, v2])
+
+        # Fill the seam
+        for i in range(self.v_res):
+            v1 = self.rows[i][-1]
+            v2 = self.rows[i][0]
+            v3 = self.rows[i + 1][0]
+            v4 = self.rows[i + 1][-1]
+
+            # This is intentionally clockwise to ensure normals are
+            # pointing outwards
+            self.mesh.add_face([v1, v4, v3])
+            self.mesh.add_face([v1, v3, v2])
+
+        # Add cap at the start end
+        for j in range(self.u_res - 1):
+            v1 = self.rows[0][j]
+            v2 = self.rows[0][j + 1]
+            self.mesh.add_face([self.start_cap, v1, v2])
+
+        # start cap seam
+        v1 = self.rows[0][-1]
+        v2 = self.rows[0][0]
+        self.mesh.add_face([self.start_cap, v1, v2])
+
+        # end cap
+        for j in range(self.u_res - 1):
+            v1 = self.rows[-1][j]
+            v2 = self.rows[-1][j + 1]
+            self.mesh.add_face([self.end_cap, v2, v1])
+
+        # end cap seam
+        v1 = self.rows[-1][-1]
+        v2 = self.rows[-1][0]
+        self.mesh.add_face([self.end_cap, v2, v1])
 
     def __call__(self, u, v):
         return add_vecs(self.coil(v), self.cross_section(u, v))

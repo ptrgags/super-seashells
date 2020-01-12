@@ -6,7 +6,7 @@
     "coil_q": [2, 2],
     "coil_z": [0, 5],
     "cross_section_resolution": 50,
-    "coil_angle": [0, 4],
+    "coil_angle": [0, 3.5],
     "coil_logarithm": [0, 0],
     "cross_section_m": [4, 2],
     "cross_section_n": [4, 2],
