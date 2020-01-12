@@ -60,6 +60,7 @@ class SuperSeashell:
 
     def generate_mesh(self):
         self.generate_vertices()
+        self.generate_faces()
         return self.mesh
 
     def generate_vertices(self):
@@ -129,6 +130,41 @@ class SuperSeashell:
 
         end_cap = self.coil(1.0)
         self.end_cap = self.mesh.add_vertex(end_cap)
+
+    def generate_faces(self):
+        if self.topology == 'torus':
+            self.generate_torus_faces()
+        elif self.topology == 'cone':
+            self.generate_cone_faces()
+        elif self.topology == 'reverse_cone':
+            self.generate_reverse_cone_faces()
+        elif self.topology == 'cylinder':
+            self.generate_cylinder_faces()
+        else:
+            raise RuntimeError(f'Not a valid topology: {self.topology}')
+
+    def generate_torus_faces(self):
+        pass
+
+    def generate_cone_faces(self):
+        pass
+
+    def generate_reverse_cone_faces(self):
+        pass
+
+    def generate_cylinder_faces(self):
+        for i in range(self.v_res):
+            for j in range(self.u_res - 1):
+                print(i, j)
+                v1 = self.rows[i][j]
+                v2 = self.rows[i][j + 1]
+                v3 = self.rows[i + 1][j + 1]
+                v4 = self.rows[i + 1][j]
+
+                # This is intentionally clockwise to ensure normals are
+                # pointing outwards
+                self.mesh.add_face([v1, v4, v3])
+                self.mesh.add_face([v1, v3, v2])
 
     def __call__(self, u, v):
         return add_vecs(self.coil(v), self.cross_section(u, v))
