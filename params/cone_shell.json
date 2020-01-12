@@ -4,12 +4,12 @@
     "coil_radius": [0.8, 0.0],
     "coil_p": [2, 2],
     "coil_q": [2, 2],
-    "coil_z": [0, 3],
+    "coil_z": [0, 5],
     "cross_section_resolution": 50,
-    "coil_angle": [0, 5],
+    "coil_angle": [0, 4],
     "coil_logarithm": [0, 0],
-    "cross_section_m": [0.8, 0.8],
-    "cross_section_n": [0.8, 0.8],
+    "cross_section_m": [2, 2],
+    "cross_section_n": [2, 2],
     "cross_section_twist": [0, 0],
-    "cross_section_radius": [0.4, 0.0]
+    "cross_section_radius": [0.7, 0.0]
 }

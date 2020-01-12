@@ -1,15 +1,15 @@
 {
     "topology": "cylinder",
-    "coil_resolution": 100,
+    "coil_resolution": 200,
     "coil_radius": [1.0, 1.0],
     "coil_p": [2, 2],
     "coil_q": [2, 2],
     "coil_z": [0, 4.5],
-    "cross_section_resolution": 50,
+    "cross_section_resolution": 200,
     "coil_angle": [0, 3.5],
     "coil_logarithm": [0, 0],
-    "cross_section_m": [4, 0.7],
-    "cross_section_n": [4, 0.7],
-    "cross_section_twist": [0, 0],
+    "cross_section_m": [0.4, 0.4],
+    "cross_section_n": [0.4, 0.4],
+    "cross_section_twist": [0, 8],
     "cross_section_radius": [0.6, 0.6]
 }

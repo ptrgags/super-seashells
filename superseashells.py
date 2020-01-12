@@ -373,9 +373,9 @@ class SuperSeashell:
     def twisted(self, u, v): 
         m = self.loglerp_params('cross_section_m', v)
         n = self.loglerp_params('cross_section_n', v)
-        delta = self.lerp_params('cross_section_twist', v)
+        delta = self.lerp_params('cross_section_twist', v) * 2.0 * math.pi
         r = self.lerp_params('cross_section_radius', v)
-        theta = 2 * math.pi * u
+        theta = 2.0 * math.pi * u
 
         shape = superellipse(theta, m, n)
         return scale(rotate(shape, delta), r)

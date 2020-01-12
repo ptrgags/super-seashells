@@ -1,0 +1,15 @@
+{
+    "topology": "cone",
+    "coil_resolution": 100,
+    "coil_radius": [0.75, 0.1],
+    "coil_p": [2, 2],
+    "coil_q": [2, 2],
+    "coil_z": [0, 2.5],
+    "cross_section_resolution": 4,
+    "coil_angle": [0, 5],
+    "coil_logarithm": [0, 0],
+    "cross_section_m": [1, 1],
+    "cross_section_n": [1, 1],
+    "cross_section_twist": [0, 0],
+    "cross_section_radius": [0.4, 0.0]
+}
