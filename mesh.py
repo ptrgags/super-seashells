@@ -1,3 +1,4 @@
+import math
 import struct
 import json
 
@@ -17,7 +18,12 @@ def cross(a, b):
 def compute_normal(a, b, c):
     ab = subtract(b, a)
     ac = subtract(c, a)
-    return cross(ab, ac)
+    return normalize(cross(ab, ac))
+
+def normalize(vec):
+    (x, y, z) = vec
+    length = math.sqrt(x * x + y * y + z * z)
+    return (x / length, y / length, z / length)
 
 class Mesh:
     def __init__(self):
@@ -82,7 +88,7 @@ class Mesh:
             max_y = max(max_y, y)
             max_z = max(max_z, z)
 
-            (x, y, z) = self.vertices[v2]
+            (x, y, z) = self.vertices[v3]
             vertex_bv += pack_vec3(x, y, z)
             min_x = min(min_x, x)
             min_y = min(min_y, y)
@@ -92,7 +98,8 @@ class Mesh:
             max_z = max(max_z, z)
 
             (nx, ny, nz) = self.normals[n]
-            normal_bv += pack_vec3(x, y, z)
+            normal_bin = pack_vec3(nx, ny, nz)
+            normal_bv += normal_bin * 3
 
         min_pos = [min_x, min_y, min_z]
         max_pos = [max_x, max_y, max_z]
@@ -106,7 +113,7 @@ class Mesh:
         GLB_CHUNK_JSON = b'JSON'
         GLB_VERSION = pack_u32(2)
         GLB_FLOAT = 5126
-
+        
         vertex_bv, normal_bv, min_pos, max_pos = self.make_glb_buffer_views()
         
         vert_offset = 0
@@ -170,20 +177,18 @@ class Mesh:
                 {
                     "name": "Vertices",
                     "bufferView": 0,
-                    "byteOffset": 0,
                     "componentType": GLB_FLOAT, 
                     "type": "VEC3",
-                    "count": len(self.faces),
+                    "count": 3 * len(self.faces),
                     "min": min_pos,
                     "max": max_pos
                 },
                 {
                     "name": "Normals",
                     "bufferView": 1,
-                    "byteOffset": 0,
                     "componentType": GLB_FLOAT,
                     "type": "VEC3",
-                    "count": len(self.faces)
+                    "count": 3 * len(self.faces)
                 }
             ]
         }
