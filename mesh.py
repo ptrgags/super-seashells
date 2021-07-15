@@ -113,6 +113,7 @@ class Mesh:
         GLB_CHUNK_JSON = b'JSON'
         GLB_VERSION = pack_u32(2)
         GLB_FLOAT = 5126
+        GLB_MODE_TRIANGLES = 4
         
         vertex_bv, normal_bv, min_pos, max_pos = self.make_glb_buffer_views()
         
@@ -130,6 +131,7 @@ class Mesh:
             "asset": {
                 "version": "2.0"
             },
+            "scene": 0,
             "scenes": [
                 {
                     "nodes": [0]
@@ -149,7 +151,7 @@ class Mesh:
                                 "POSITION": 0,
                                 "NORMAL": 1
                             },
-                            #"mode": GLB_MODE_TRIANGLES
+                            "mode": GLB_MODE_TRIANGLES
                         }
                     ]
                 }
