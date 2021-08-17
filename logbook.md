@@ -96,3 +96,27 @@ Those will appear in my other repo, [`processing-sketchbook`](https://github.com
 3. Fix the y-up issue.
 4. Prototype the various parts before combining them in this repo. This could
     take a while.
+
+### 2021-08-17 Putting The Pieces Together
+
+In the past few weeks I've been working in my `processing-sketchbook` repo on
+the three individual pieces. I'm not quite done there, but I'm far enough 
+along that I can start thinking about how to combine the three simulations into
+one.
+
+I'm going to call this new seashell a "diffyshell". The "diffy" part is because
+all three parts refer to differential equations, sometimes shortened to "diff EQ" or "diffy Q" when in school.
+
+So far I've implemented `diffyshell.DifferentialPath` though it's not quite right. I can get a circular path (constant curvature, 0 torsion), but when
+I add in constant torsion, I get a diagaonal path, not a helical one:
+
+| circle - looks correct | helix - not quite there yet... |
+|------------------------|--------------------------------|
+| ![circle](figures/circle.png) | ![bad helix](figures/this-should-be-a-helix.png)|
+
+Next Steps:
+
+* Clean up the `processing-sketchbook` projects and merge them so I don't have
+    loose ends I never clean up
+* Debug why the differential path doesn't give the expected path.
+* port the other simulations, `DifferentialGrowth` and `DifferentialTexture`
