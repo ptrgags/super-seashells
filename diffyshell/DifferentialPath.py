@@ -14,7 +14,7 @@ class DifferentialPath():
         # Iterations per row
         self.iters_per_row = 100
         # Total length of the path
-        self.max_length = 100
+        self.max_length = 2 * math.pi * 10
 
         # compute the number of rows we'll need for the simulation
         rows = math.ceil(
@@ -32,6 +32,12 @@ class DifferentialPath():
         # Computed curvature and torsion values at the start of each row
         self.curvature = numpy.zeros(rows, dtype=numpy.float64)
         self.torsion = numpy.zeros(rows, dtype=numpy.float64)
+
+        # maximum radii of the cross section at each point on the curve.
+        # this is used to bound the differential growth simulation.
+        # this is linear growth, so we can compute it all in one go.
+        self.max_radius = 2 * math.pi
+        self.radii = numpy.linspace(0, self.max_radius, rows)
 
         # curvature and torsion callbacks
         HELIX_A = 4
@@ -60,9 +66,33 @@ class DifferentialPath():
         y = self.positions[:, 1]
         z = self.positions[:, 2]
 
+        # make circular cross sections with the given radii
+        M = 16
+        t = numpy.linspace(0, 2 * math.pi, M)
+        cx = numpy.cos(t)
+        cy = numpy.sin(t)
+
+        # radii are length N
+        # normals are N x 3
+        # cx, cy are length M (number of cross section vertices)
+        # we want a N x M x 3 matrix so broadcast:
+        # 1 x M x 1
+        # N x 1 x 3
+        cross_n = self.radii[:, None, None] * cx[None, :, None] * self.normals[:, None, :]
+        cross_b = self.radii[:, None, None] * cy[None, :, None] * self.binormals[:, None, :]
+        cross_sections = self.positions[:, None, :] + cross_n + cross_b
+        print(cross_sections.shape)
+
         fig = plt.figure()
         ax = fig.add_subplot(111, projection='3d')
         ax.plot(x, y, z)
+
+        N = len(self.positions)
+        for i in range(N):
+            ax.plot(
+                cross_sections[i, :, 0],
+                cross_sections[i, :, 1],
+                cross_sections[i, :, 2])
         plt.show()
 
     def init_simulation(self):
