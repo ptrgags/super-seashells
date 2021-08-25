@@ -120,3 +120,18 @@ Next Steps:
     loose ends I never clean up
 * Debug why the differential path doesn't give the expected path.
 * port the other simulations, `DifferentialGrowth` and `DifferentialTexture`
+
+### 2021-08-25 WIP: Differential Growth
+
+The past couple days, I've been porting the code from the differential growth
+simulation (in the `processing-sketchbook` repo on a branch) to Python for use
+in making diffyshells. Most of the way done, though still have several parts of
+the code to check.
+
+Next Steps:
+
+* Finish porting differential growth code
+* Determine how to generate a triangle mesh from the growth simulation
+* Change the mesh generation code to use NumPy
+* Make it possible to gather the angle at each vertex, this could be
+    interesting metadata

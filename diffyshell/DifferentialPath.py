@@ -59,9 +59,9 @@ class DifferentialPath():
         for i in range(1, self.rows):
             self.compute_row(i)
 
-        self.show_path()
+        self.display()
 
-    def show_path(self):
+    def display(self):
         x = self.positions[:, 0]
         y = self.positions[:, 1]
         z = self.positions[:, 2]

@@ -10,3 +10,4 @@ class DifferentialSeashell:
     
     def compute(self):
         self.path.compute()
+        self.cross_section.compute()
