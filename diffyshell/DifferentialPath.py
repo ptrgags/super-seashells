@@ -59,7 +59,7 @@ class DifferentialPath():
         for i in range(1, self.rows):
             self.compute_row(i)
 
-        self.display()
+        #self.display()
 
     def display(self):
         x = self.positions[:, 0]
@@ -166,22 +166,11 @@ class DifferentialPath():
         normal = self.normals[row]
         binormal = self.binormals[row]
 
-        '''
-        print("iter")
-        print(position, tangent, normal, binormal)
-        print(curvature, torsion)
-        '''
-
         # compute the changes in the Frenet-Serret frame directions given
         # the Frenet-Serret formulas
         delta_tangent = curvature * normal
         delta_normal = -curvature * tangent + torsion * binormal
         delta_binormal = -torsion * normal
-
-        '''
-        print("deltas")
-        print(delta_tangent, delta_normal, delta_binormal)
-        '''
 
         # use Euler integration to update the Frenet-Serret frame.
         self.tangents[row] = tangent + self.delta_arc_length * delta_tangent

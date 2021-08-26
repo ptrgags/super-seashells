@@ -135,3 +135,24 @@ Next Steps:
 * Change the mesh generation code to use NumPy
 * Make it possible to gather the angle at each vertex, this could be
     interesting metadata
+
+### 2021-08-26 Well it's doing something
+
+Today I started debugging the differential growth code. Output isn't
+the expected shape, but at least it's outputting something. It actually
+looks pretty neat:
+
+![At least it's doing something](figures/start_of_growth.png)
+
+The top diagram is a superposition of all the cross sections. The
+bottom diagram plots the slices against time (time going from bottom to top)
+
+So it looks like it's just shrinking. I'm guessing one of the following
+problems is happening:
+
+* The simulation is running far too slowly. It does take a while for the
+    growth patterns to manifest. I need to try tweaking the parameters to
+    increase the itereations per row
+* I also need to check that the code for repulsion forces is working correctly.
+
+I guess we'll see.

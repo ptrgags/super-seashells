@@ -12,7 +12,7 @@ class DifferentialGrowth():
         max_nodes = 500
 
         self.positions = numpy.zeros((rows, max_nodes, 2), dtype=numpy.float64)
-        self.slice_lengths = numpy.zeros(rows, dtype=numpy.float64)
+        self.slice_lengths = numpy.zeros(rows, dtype=int)
 
         self.rows = 100
         self.max_nodes = 500
@@ -34,10 +34,8 @@ class DifferentialGrowth():
 
     def compute(self):
         self.init_simulation()
-        '''
         for i in range(1, self.rows):
             self.compute_row(i)
-        '''
         
         self.display()
     
@@ -47,6 +45,7 @@ class DifferentialGrowth():
         # first plot: cross sections superimposed in 2D
         # second plot: cross sections arranged in 3D
         ax_cross_section = fig.add_subplot(2, 1, 1)
+        ax_cross_section.set_aspect('equal', 'box')
         ax_slices = fig.add_subplot(2, 1, 2, projection='3d')
         for i in range(self.rows):
             count = self.slice_lengths[i]
@@ -74,7 +73,7 @@ class DifferentialGrowth():
     def row_snapshot(self, row):
         nodes = self.polygon.nodes
         if len(nodes) > self.max_nodes:
-            raise RuntimeError(f"Too many nodes at row ${row}! Try slowing down the growth rates")
+            raise RuntimeError(f"Too many nodes at row {row}! Try slowing down the growth rates")
 
         self.slice_lengths[row] = len(nodes)
         for i, node in enumerate(nodes):
@@ -90,4 +89,4 @@ class DifferentialGrowth():
         self.polygon.update(self.delta_time)
         results = self.quadtree.redistribute_dirty_points()
         if len(results) > 0:
-            raise RuntimeError(f"Failed to redistribute points: ${results}")
+            raise RuntimeError(f"Failed to redistribute points: {results}")

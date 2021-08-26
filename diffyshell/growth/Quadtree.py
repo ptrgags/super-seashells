@@ -23,11 +23,11 @@ class Quadtree:
     
     @property
     def is_leaf(self):
-        return self.children.length == 0
+        return len(self.children) == 0
     
     @property
     def is_empty(self):
-        return self.points.length == 0
+        return len(self.points) == 0
     
     def insert_point(self, point):
         if not self.contains(point):
@@ -35,9 +35,9 @@ class Quadtree:
         
         if self.is_leaf:
             point.quadtree_node = self
-            self.points.push(point)
+            self.points.append(point)
 
-            if self.points.length > self.capacity:
+            if len(self.points) > self.capacity:
                 self.subdivide()
         else:
             quadrant = self.bounds.get_quadrant(point.position)

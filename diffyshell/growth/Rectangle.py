@@ -6,11 +6,20 @@ class Rectangle:
         self.dimensions = dimensions
         self.midpoint = position + 0.5 * dimensions
     
+    def __repr__(self):
+        x, y = self.position
+        w, h = self.dimensions
+        return f"Rectangle ({x}, {y}, {w}, {h})"
+
     def contains(self, point):
-        pass
+        min_condition = point >= self.position
+        max_condition = point < (self.position + self.dimensions)
+        return numpy.all(min_condition & max_condition)
 
     def intersects(self, other):
-        pass
+        condition1 = self.position > (other.position + other.dimensions)
+        condition2 = other.position > (self.position + self.dimensions)
+        return numpy.all(condition1 | condition2)
 
     def get_quadrant(self, point):
         x_bit, y_bit = point >= self.midpoint

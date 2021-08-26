@@ -15,11 +15,15 @@ NEARBY_RADIUS = 20
 def limit(vector, maximum):
     old_length = numpy.linalg.norm(vector)
     new_length = min(old_length, maximum)
-    return vector * new_length / old_length
+    if old_length > 0:
+        return vector * new_length / old_length
+    return vector
 
 def normalize(vector):
     length = numpy.linalg.norm(vector)
-    return vector / length
+    if length > 0:
+        return vector / length
+    return vector
 
 def set_magnitude(vector, magnitude):
     return normalize(vector) * magnitude
@@ -78,8 +82,8 @@ class DifferentialPolygon:
             raise RuntimeError("OUT OF BOUNDS")
 
         before = self.nodes[index]
-        after = self.nodes[(index + 1) % self.nodes.length]
-        midpoint = 0.5 * (before + after)
+        after = self.nodes[(index + 1) % len(self.nodes)]
+        midpoint = 0.5 * (before.position + after.position)
 
         point = Node(midpoint)
         self.nodes = self.nodes[:index] + [point] + self.nodes[index + 1:]
@@ -89,7 +93,7 @@ class DifferentialPolygon:
         start = node
         end = self.nodes[neighbor_index]
 
-        diff = end - start
+        diff = end.position - start.position
 
         # Only apply attraction if the points get far apart
         if numpy.dot(diff, diff) < ATTRACTION_MIN_DIST_SQR:
@@ -104,7 +108,7 @@ class DifferentialPolygon:
         nearby_points = self.quadtree.circle_query(circle)
 
         count = 0
-        desired_velocity = numpy.array([0, 0])
+        desired_velocity = numpy.array([0, 0], dtype=numpy.float64)
         for nearby_point in nearby_points:
             if nearby_point == node:
                 continue
@@ -124,7 +128,7 @@ class DifferentialPolygon:
         total_force += steering_force
     
     def compute_forces(self, node, index, delta_time):
-        total_force = numpy.array([0, 0])
+        total_force = numpy.array([0, 0], dtype=numpy.float64)
 
         n = len(self.nodes)
         self.compute_attraction(total_force, node, (index - 1) % n)
@@ -150,7 +154,7 @@ class DifferentialPolygon:
         if self.iters % self.stretch_rate == 0:
             self.split_long_edges()
         
-        if self.iters % self.pinched_rate == 0:
+        if self.iters % self.pinch_rate == 0:
             self.split_pinched_angles()
         
         
