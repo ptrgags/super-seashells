@@ -10,7 +10,7 @@ class Circle:
     def get_bounding_square(self):
         r = self.radius
         position = self.center - r
-        dimensions = 2 * numpy.array([r])
+        dimensions = 2 * numpy.array([r, r])
 
         return Rectangle(position, dimensions)
 

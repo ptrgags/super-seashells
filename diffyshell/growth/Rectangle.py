@@ -11,16 +11,31 @@ class Rectangle:
         w, h = self.dimensions
         return f"Rectangle ({x}, {y}, {w}, {h})"
 
+    def __eq__(self, other):
+        positions_match = numpy.all(self.position == other.position)
+        dimensions_match = numpy.all(self.dimensions == other.dimensions)
+        return positions_match and dimensions_match
+
     def contains(self, point):
         min_condition = point >= self.position
         max_condition = point < (self.position + self.dimensions)
         return numpy.all(min_condition & max_condition)
 
     def intersects(self, other):
-        condition1 = self.position > (other.position + other.dimensions)
-        condition2 = other.position > (self.position + self.dimensions)
-        return numpy.all(condition1 | condition2)
+        left, top = self.position
+        right, bottom = self.position + self.dimensions
 
+        other_left, other_top = other.position
+        other_right, other_bottom = other.position + other.dimensions
+
+        if left > other_right or other_left > right:
+            return False
+        
+        if top > other_bottom or other_top > bottom:
+            return False
+
+        return True
+        
     def get_quadrant(self, point):
         x_bit, y_bit = point >= self.midpoint
         # cast bool -> int

@@ -8,13 +8,13 @@ from diffyshell.growth.Rectangle import Rectangle
 
 class DifferentialGrowth():
     def __init__(self):
-        rows = 100
+        rows = 200
         max_nodes = 500
 
         self.positions = numpy.zeros((rows, max_nodes, 2), dtype=numpy.float64)
         self.slice_lengths = numpy.zeros(rows, dtype=int)
 
-        self.rows = 100
+        self.rows = rows
         self.max_nodes = 500
         self.delta_time = 0.1
         self.iters_per_row = 50

@@ -156,3 +156,19 @@ problems is happening:
 * I also need to check that the code for repulsion forces is working correctly.
 
 I guess we'll see.
+
+## 2021-08-27 Unit Testing to Build Confidence
+
+I started debugging my differential growth simulation. Though it's more
+difficult here in Python as I don't have visual feedback like I do in p5.js.
+In particular, the `Quadtree` class is going to be difficult to check by hand.
+
+This is a case where I find unit testing helpful -- for the mathematical parts
+of the code, being able to test assertions about the code helps me feel more
+confident about the implementation. So far today I started by unit testing the
+rectangle and circle classes since those are used for the quadtree circle
+query. I'll do the `Quadtree` next
+
+Next Steps:
+
+* Continue debugging `Quadtree`

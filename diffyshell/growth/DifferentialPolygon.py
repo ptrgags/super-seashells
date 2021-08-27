@@ -48,7 +48,8 @@ class DifferentialPolygon:
         for i in range(n):
             start = self.nodes[i]
             end = self.nodes[(i + 1) % n]
-            edge_length_sqr = numpy.dot(start.position, end.position)
+            diff = end.position - start.position
+            edge_length_sqr = numpy.dot(diff, diff)
             if edge_length_sqr > MAX_EDGE_LENGTH_SQR:
                 self.add_point(i)
         
@@ -135,6 +136,7 @@ class DifferentialPolygon:
         self.compute_attraction(total_force, node, (index + 1) % n)
         self.compute_repulsion(total_force, node)
         # TODO: Keep within a circle. Radii should come from the
+        # path simulation
 
         node.apply_forces(total_force, delta_time)
     
