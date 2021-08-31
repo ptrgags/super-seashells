@@ -143,7 +143,7 @@ class DifferentialPolygon:
     def update(self, delta_time):
         for i, node in enumerate(self.nodes):
             self.compute_forces(node, i, delta_time)
-            node.clamp_to(self.quadtree.bounds)
+            #node.clamp_to(self.quadtree.bounds)
             node.check_if_dirty()
         
         # increment the number of iterations first to ensure we don't

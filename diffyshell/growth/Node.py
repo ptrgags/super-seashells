@@ -26,10 +26,12 @@ class Node:
         # dx = dv * dt
         self.position += self.velocity * delta_time
     
+    """
     def clamp_to(self, rectangle):
         minimum = rectangle.position
         maximum = rectangle.position + rectangle.dimensions - 1
         return numpy.clip(self.position, minimum, maximum)
+    """
     
     def check_if_dirty(self):
         self.is_dirty = not self.quadtree_node.bounds.contains(self.position)
