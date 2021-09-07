@@ -61,15 +61,11 @@ class Quadtree:
                 self.points, lambda x: x.is_dirty)
             self.points = clean_points
             return dirty_points
-        
-        empty_count = 0
+
         child_dirty_list = []
         for child in self.children:
             child_dirty_points = child.redistribute_dirty_points()
             child_dirty_list.extend(child_dirty_points)
-
-            if child.is_empty:
-                empty_count += 1
 
         outside_parent_list = []
         for point in child_dirty_list:
@@ -78,14 +74,10 @@ class Quadtree:
                 self.insert_point(point)
             else:
                 outside_parent_list.append(point)
-
-        # If all the points moved out of the parent, remove the child
-        # cells
-        if empty_count == 4:
-            self.children = []
         
         # propagate points we weren't able to redistribute
         return outside_parent_list
+
 
     def circle_query(self, circle):
         square = circle.get_bounding_square()

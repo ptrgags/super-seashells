@@ -31,6 +31,7 @@ def set_magnitude(vector, magnitude):
 class DifferentialPolygon:
     def __init__(self, initial_positions, quadtree):
         self.nodes = [Node(position) for position in initial_positions]
+        self.growth_indices = set()
 
         self.iters = 0
 
@@ -42,6 +43,9 @@ class DifferentialPolygon:
         self.quadtree = quadtree
         for node in self.nodes:
             self.quadtree.insert_point(node)
+    
+    def clear_growth_tracking(self):
+        self.growth_indices = set()
         
     def split_long_edges(self):
         n = len(self.nodes)
@@ -66,7 +70,7 @@ class DifferentialPolygon:
 
             cos_angle = numpy.dot(ba, bc)
             if cos_angle > PINCH_THRESHOLD:
-                split_points.push(i)
+                split_points.append(i)
         
         # add points in reverse order so we don't insert in the wrong
         # place
@@ -79,8 +83,14 @@ class DifferentialPolygon:
         self.add_point(index)
     
     def add_point(self, index):
+        # TODO: How to avoid skipping?
+        if index in self.growth_indices:
+            print(f"Warning: repeated index {index}, skipping")
+            return
+        self.growth_indices.add(index)
+
         if not 0 <= index <= len(self.nodes):
-            raise RuntimeError("OUT OF BOUNDS")
+            raise RuntimeError("growth index out of bounds")
 
         before = self.nodes[index]
         after = self.nodes[(index + 1) % len(self.nodes)]

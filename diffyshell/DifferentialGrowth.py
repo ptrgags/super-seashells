@@ -8,11 +8,12 @@ from diffyshell.growth.Rectangle import Rectangle
 
 class DifferentialGrowth():
     def __init__(self):
-        rows = 200
+        rows = 100
         max_nodes = 500
 
         self.positions = numpy.zeros((rows, max_nodes, 2), dtype=numpy.float64)
         self.slice_lengths = numpy.zeros(rows, dtype=int)
+        self.growth_indices = [None for x in range(rows)]
 
         self.rows = rows
         self.max_nodes = 500
@@ -36,7 +37,11 @@ class DifferentialGrowth():
         self.init_simulation()
         for i in range(1, self.rows):
             self.compute_row(i)
-        
+
+            if i % 10 == 0:
+                print(f"computing row {i}")
+
+        print("Displaying results...")
         self.display()
     
     def display(self):
@@ -52,8 +57,11 @@ class DifferentialGrowth():
             x = self.positions[i, :count, 0]
             y = self.positions[i, :count, 1]
             z = numpy.full(x.shape, i * 10)
-            ax_cross_section.plot(x, y)
-            ax_slices.plot(x, y, z)
+
+            fraction = (i / (self.rows - 1))
+            color = (1, fraction, 0, 0.5 * fraction + 0.5)
+            ax_cross_section.plot(x, y, color=color)
+            ax_slices.plot(x, y, z, color=color)
         
         plt.show()
 
@@ -78,6 +86,11 @@ class DifferentialGrowth():
         self.slice_lengths[row] = len(nodes)
         for i, node in enumerate(nodes):
             self.positions[row][i] = node.position
+        
+        # store growth indices in the parent row, then reset the polygon's
+        # growth tracking for the next row
+        self.growth_indices[row] = self.polygon.growth_indices
+        self.polygon.clear_growth_tracking()
     
     def compute_row(self, row):
         for _ in range(self.iters_per_row):
@@ -89,4 +102,5 @@ class DifferentialGrowth():
         self.polygon.update(self.delta_time)
         results = self.quadtree.redistribute_dirty_points()
         if len(results) > 0:
-            raise RuntimeError(f"Failed to redistribute points: {results}")
+            print(f"warning: failed to redistribute points: {results}")
+            #raise RuntimeError(f"Failed to redistribute points: {results}")

@@ -91,3 +91,45 @@ def test_insert_point():
     top_right = quadtree.children[0b10]
     expected = [[point2], [point6], [point5], []]
     assert [c.points for c in top_right.children] == expected
+
+def test_redistribute_points():
+    quadtree = Quadtree(BOUNDS, 4)
+    a = node(10, 10)
+    b = node(50, 10)
+    c = node(10, 50)
+    d = node(50, 50)
+    e = node(200, 200)
+    f = node(200, 30)
+    quadtree.insert_point(a)
+    quadtree.insert_point(b)
+    quadtree.insert_point(c)
+    quadtree.insert_point(d)
+    quadtree.insert_point(e)
+    quadtree.insert_point(f)
+    expected = [[a, b, c, d], [], [f], [e]]
+    assert [c.points for c in quadtree.children] == expected
+
+    # a moves within the same quadrant
+    a.position[0] = 20
+    a.check_if_dirty()
+    assert not a.is_dirty
+    # now move b, c, and d into new quadtrants
+    b.position[0] = 150
+    b.check_if_dirty()
+    assert b.is_dirty
+    c.position[1] = 150
+    c.check_if_dirty()
+    assert c.is_dirty
+    d.position = [150, 150]
+    d.check_if_dirty()
+    assert d.is_dirty
+    # move f out of bounds
+    f.position = [500, 0]
+    f.check_if_dirty()
+    assert f.is_dirty
+
+    # all the points except fshould be distributed
+    outside_parent = quadtree.redistribute_dirty_points()
+    assert outside_parent == [f]
+    expected = [[a], [c], [b], [d, e]]
+    assert [c.points for c in quadtree.children] == expected

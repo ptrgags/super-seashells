@@ -172,3 +172,37 @@ query. I'll do the `Quadtree` next
 Next Steps:
 
 * Continue debugging `Quadtree`
+
+## 2021-09-07 Cross Sections
+
+I debugged things a little more. It seems the problem had to do with pruning
+nodes. I removed that code. If I need to prune empty cells, I can do that as
+a separate recursive function so the `redistribute_points()` function doesn't
+get messed up.
+
+The resulting stack of cross-sections look really interesting:
+
+| 200 rows @ 10 iters/row | 100 rows @ 50 iters/row |
+|---|---|
+| ![Cross Sections](figures/cross-sections.png) | ![Moving Cross Section](figures/its-moving.png) |
+
+Notice in the second one that the cross-sections aren't stacked but are skewed
+to the side. This is because there's nothing to prevent the cross-section from
+moving. 
+
+I think that soft boundary constraints (stay within a circle) will be helpful
+here, not only will it help prevent uncontrollable growth, it should keep the
+overall shape roughly centered.
+
+There's plenty that can be done still in terms of tuning the simulation. Though
+another thing to think through is how to turn these cross-sections into a mesh.
+I need to think about how I want to handle indexing and normals. Also, I might
+want to redo the old `Mesh` class to use NumPy if I run into performance
+issues.
+
+Next Steps:
+
+* Add circular boundary constraints
+* Tweak size of simulation
+* Generate mesh from the results
+* Rewrite `Mesh` to use NumPy if needed
