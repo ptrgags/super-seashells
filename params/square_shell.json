@@ -11,5 +11,5 @@
     "cross_section_m": [8, 8],
     "cross_section_n": [8, 8],
     "cross_section_twist": [0, 0],
-    "cross_section_radius": [0.5, 0.001]
+    "cross_section_radius": [0.5, 0.1]
 }
